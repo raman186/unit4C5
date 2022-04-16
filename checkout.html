@@ -46,6 +46,7 @@
 </body>
 <script>
         document.querySelector('form').addEventListener('submit', function(){
+            event.preventDefault();
             alert("make payment");
         window.location.href="payment.html";
     });
