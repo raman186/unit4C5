@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+    <button id="homepage">Home</button>
+    <div>
+        <input type="text" placeholder="Enter Promo Code" id="pcode"/>
+        <button id="promo">Apply Promo</button>
+    </div>
+</div>
+
+<div> 
+    <div><p id="items"></p></div>
+    <div><p id="prices"></p></div>
+    <div><p id="discount"></p></div>
+    <div><p id="final"></p></div>
+</div> 
+    <div class="cart">
+
+    </div>
+
+</body>
+<script>
+        document.querySelector("#homepage").addEventListener('click',cartFn);
+    function cartFn(){
+        window.location.href="product.html"
+    }
+    var productData=JSON.parse(localStorage.getItem('productData'));
+
+    var totalSum = productData.reduce(function(sum, ele, index, arr) {
+        return sum + Number(ele.price);
+    }, 0);
+    var totalItems = productData.length;
+    document.querySelector('#items').innerText ="Total number of items = " + totalItems;
+    document.querySelector('#prices').innerText ="Total price of all items = " +totalSum; 
+    document.querySelector('#discount').innerText ="Discount = 0"; 
+    document.querySelector('#final').innerText ="Final Price = " + totalSum; 
+
+    document.querySelector("#promo").addEventListener('click',promoFn);
+    function promoFn(){
+        var appliedCode=document.querySelector("#pcode").value;
+        if(appliedCode==='masai30'){
+            var dis=totalSum*0.3;
+            var fin=totalSum-dis;
+            document.querySelector('#discount').innerText ="Discount = " + dis; 
+            document.querySelector('#final').innerText ="Final Price = " + fin; 
+
+            totalSum=totalSum*70/100;
+            document.querySelector('#prices').innerText ="Total price of all items = " +totalSum; 
+            console.log(appliedCode)
+
+        }
+    }
+    productData.forEach((cartItem, cartIndex)=>
+    {
+        var box=document.createElement('div')
+      box.setAttribute('class','box');
+      var name=document.createElement('p');
+      name.textContent=cartItem.name;
+      var rating=document.createElement('p');
+      rating.textContent=cartItem.rating;
+      var image=document.createElement('img');
+      image.src=cartItem.image_url;
+      var price=document.createElement('p');
+      price.textContent=cartItem.price;
+    
+      var remove_button=document.createElement('button');
+      remove_button.innerText='Remove From Cart';
+      remove_button.addEventListener('click', function(){
+        productData.splice(cartIndex,1)
+        localStorage.setItem('productData',JSON.stringify(productData));
+        window.location.reload();
+    });
+
+    var buy=document.createElement('button');
+    buy.innerText='Buy Now';
+    buy.addEventListener('click', function(){
+        window.location.href="checkout.html";
+
+    });
+      box.append(name,rating,image,price,remove_button,buy);
+    document.querySelector(".cart").append(box);
+
+    })
+</script>
+</html>
